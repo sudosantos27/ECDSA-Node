@@ -2,15 +2,18 @@ import { useState } from "react";
 import server from "./server";
 
 function Transfer({ address, setBalance }) {
-  const [sendAmount, setSendAmount] = useState("");
-  const [recipient, setRecipient] = useState("");
+  const [sendAmount, setSendAmount] = useState(""); // State for the send amount
+  const [recipient, setRecipient] = useState(""); // State for the recipient address
 
+  // Helper function to update state values
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
+  // Function to handle the transfer form submission
   async function transfer(evt) {
     evt.preventDefault();
 
     try {
+      // Send a POST request to the server's "send" endpoint
       const {
         data: { balance },
       } = await server.post(`send`, {
@@ -18,8 +21,11 @@ function Transfer({ address, setBalance }) {
         amount: parseInt(sendAmount),
         recipient,
       });
+
+      // Update the balance state with the response from the server
       setBalance(balance);
     } catch (ex) {
+      // Display an alert with the error message from the server
       alert(ex.response.data.message);
     }
   }
